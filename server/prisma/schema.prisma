@@ -17,10 +17,21 @@ model User {
   emailVerifiedAt DateTime? 
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  sessions Session[]
 }
 
 enum Role {
   CUSTOMER
   STAFF
   ADMIN
+}
+
+model Session {
+  id String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId String   @db.Uuid
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  refreshTokenHash String
+  expireAt DateTime
+  revokeAt DateTime?
+  createdAt DateTime
 }
