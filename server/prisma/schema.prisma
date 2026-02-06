@@ -8,30 +8,30 @@ datasource db {
 }
 
 model User {
-  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  username        String   @unique
-  email           String   @unique
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  username        String    @unique
+  email           String    @unique
   passwordHash    String
-  role            Role     @default(CUSTOMER)
-  isActive        Boolean  @default(true)
-  emailVerifiedAt DateTime? 
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  sessions Session[]
-}
-
-enum Role {
-  CUSTOMER
-  STAFF
-  ADMIN
+  role            Role      @default(User)
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  emailVerifiedAt DateTime?
+  sessions        Session[]
 }
 
 model Session {
-  id String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId String   @db.Uuid
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId           String    @db.Uuid
   refreshTokenHash String
-  expireAt DateTime
-  revokeAt DateTime?
-  createdAt DateTime
+  expireAt         DateTime
+  revokeAt         DateTime?
+  createdAt        DateTime
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+  User
+  STAFF
+  ADMIN
 }
