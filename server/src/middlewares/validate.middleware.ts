@@ -6,7 +6,7 @@ export const validate = ( schema:ZodType)=> (req:Request,res:Response, next: Nex
     if(!result.success){
         return res.status(400).json({
             message: "validation failed",
-            errors : result.error.flatten(),
+            errors : result.error.issues,
         });
     }
 
