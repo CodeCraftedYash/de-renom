@@ -28,10 +28,11 @@ export const signupService = async (data:signupInput) => {
             username : data.username,
             email: data.email,
             passwordHash : hashedPassword,
-
         }
     })
-    console.log("user created successfully :",hashedPassword)
+   return {
+    user
+   }
 }   
 
 export const loginService = async (data:loginInput) => {
