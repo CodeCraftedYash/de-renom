@@ -30,8 +30,20 @@ export const signupService = async (data:signupInput) => {
             passwordHash : hashedPassword,
         }
     })
+    const { refreshToken } = await createSession(user.id);
+    const accessToken = signAccessToken({
+        sub: user.id,
+        role: user.role
+    });
    return {
-    user
+    user:{
+        id:user.id,
+        username:user.username,
+        role:user.role,
+        isActive:user.isActive
+    },
+    accessToken,
+    refreshToken
    }
 }   
 
