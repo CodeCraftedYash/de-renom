@@ -3,7 +3,7 @@ import { hashPassword, comparePassword } from "../../utils/hash.js";
 import { signupInput,loginInput } from "./auth.schema.js";
 import { signAccessToken } from "../../utils/token.js";
 import { createSession } from "./auth.session.service.js";
-
+import { appError } from "../../utils/appError.js";
 
 
 export const signupService = async (data:signupInput) => {
@@ -18,7 +18,7 @@ export const signupService = async (data:signupInput) => {
     })
 
     if(existingUser){ 
-        throw new Error("Email or username already exists");
+        throw new appError("Email or username already exists",409);
     }
 
     const hashedPassword = await hashPassword(data.password);
@@ -53,7 +53,7 @@ export const loginService = async (data:loginInput) => {
     })
 
     if(!user || !user.isActive){
-        throw new Error("Invalid credentials")
+        throw new appError("User not found or inactive",404);
     }
     
     const isValid = await comparePassword(
@@ -62,7 +62,7 @@ export const loginService = async (data:loginInput) => {
     )
     
     if(!isValid){
-        throw new Error("Invalid password")
+        throw new appError("Invalid credential",401);
     }
 
     const accessToken = signAccessToken({
@@ -86,7 +86,7 @@ export const loginService = async (data:loginInput) => {
 
 export const logoutService = async (sessionId:string) => {
     if(!sessionId){
-        throw new Error("Session Id required");
+        throw new appError("Invalid session or not found",405)
     }
 
     const session = await prisma.session.findUnique({
@@ -94,7 +94,7 @@ export const logoutService = async (sessionId:string) => {
     });
 
     if(!session){
-        throw new Error("Session not found");
+        throw new appError("Session not found",404);
     }
 
     if( session.revokeAt ){
