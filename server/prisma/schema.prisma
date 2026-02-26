@@ -35,3 +35,37 @@ enum Role {
   STAFF
   ADMIN
 }
+
+model Product {
+  id          String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String 
+  slug        String            @unique
+  description String 
+  isActive    Boolean           @default(true)
+  variants    productVariant[]
+  images      productImage[]
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}
+
+model productVariant {
+  id        String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  productId String  @db.Uuid
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name      String
+  sku       String  @unique
+  price     Decimal @db.Decimal(10,2)
+  stock     Int
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model productImage {
+id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+productId String @db.Uuid
+product  Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+url String
+position Int @default(0)
+createdAt DateTime @default(now())
+}
