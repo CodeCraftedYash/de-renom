@@ -1,6 +1,8 @@
 import { Request,Response } from "express";
-import { loginService, logoutService, signupService } from "./auth.services";
+import { getMeService, loginService, logoutService, signupService } from "./auth.services";
 import { cookieOptions } from "../../config/cookie";
+import { refreshService } from "./auth.refresh";
+import { AuthenticateType } from "../../types/authenticateType";
 
 export const signupController = async (req:Request,res:Response) => {
     const result = await signupService(req.body);
@@ -34,3 +36,29 @@ export const logoutController = async (req:Request,res:Response) => {
         message: "Logged out successfully",
     });
 }
+
+export const refreshController = async ( req: Request, res: Response ) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+
+    const {
+      accessToken,
+      newRefreshToken,
+    } = await refreshService(refreshToken);
+
+    res
+      .cookie("refreshToken", newRefreshToken, cookieOptions)
+      .json({
+        accessToken,
+      });
+
+  } catch {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+};
+
+export const meController = async (req: AuthenticateType, res: Response) => {
+    const userId = req.user!.sub;
+    const user = await getMeService(userId);
+    res.json(user);
+};
