@@ -1,6 +1,6 @@
 //this middleware extracts the meta deta from the header and read its value to verify if the request is authentic 
 
-import { NextFunction,Request,Response } from "express";
+import { NextFunction,Response } from "express";
 import jwt from "jsonwebtoken";
 import { env } from "../modules/auth/auth.env";
 import { AuthenticateType } from "../types/authenticateType";
