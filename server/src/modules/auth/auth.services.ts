@@ -108,3 +108,15 @@ export const logoutService = async (sessionId:string) => {
         }
     })
 }
+
+export const getMeService = async (userId:string) => {
+    const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+            id: true,
+            username: true,
+            role: true,
+            createdAt: true,
+        }
+    })
+}
