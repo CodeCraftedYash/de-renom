@@ -3,6 +3,6 @@ import { CookieOptions } from "express"
 export const cookieOptions: CookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: "none",
-    path:"/auth/refresh"
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    path:"/"
 }
