@@ -60,5 +60,5 @@ export const refreshController = async ( req: Request, res: Response ) => {
 export const meController = async (req: AuthenticateType, res: Response) => {
     const userId = req.user!.sub;
     const user = await getMeService(userId);
-    res.json(user);
+    res.status(201).json({message:"success",user});
 };
