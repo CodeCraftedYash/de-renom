@@ -119,4 +119,5 @@ export const getMeService = async (userId:string) => {
             createdAt: true,
         }
     })
+    return user;
 }
