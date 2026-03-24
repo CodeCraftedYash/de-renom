@@ -31,7 +31,7 @@ export const refreshService = async (refreshToken: string,) =>{
     }
 
     if(session.expireAt < new Date()){
-        await prisma.session.deleteMany({ where: {id: session.id }});
+        await prisma.session.delete({ where: {id: session.id }});
         throw new Error("Session expired");
     }
 
@@ -41,11 +41,11 @@ export const refreshService = async (refreshToken: string,) =>{
     )
 
     if(!isValid){
-        await prisma.session.deleteMany({ where: {id: session.id }});
+        await prisma.session.delete({ where: {id: session.id }});
         throw new Error("Unauthorized");
     }
 
-    await prisma.session.deleteMany({
+    await prisma.session.delete({
         where: { id: session.id },
     });
 
