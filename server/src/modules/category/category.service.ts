@@ -22,8 +22,29 @@ export const createCategoryService = async ( name:string ) => {
 };
 
 export const deleteCategoryService = async (id: string) => {
-  const category = await prisma.category.findUnique({ where: { id } });
-  if (!category) throw new appError("Category not found", 404);
+    try {
+    return await prisma.category.delete({
+      where: { id },
+    });
+  } catch (err: any) {
+    if (err.code === "P2025") {
+      throw new appError("Category not found", 404);
+    }
+    throw err;
+  }
+};
 
-  await prisma.category.delete({ where: { id } });
+export const renameCategoryService = async (id:string,name:string) => {
+     if (!name || name.trim() === "") {
+    throw new appError("Name is required", 400);
+  }
+    const update = await prisma.category.update({
+        where:{id},
+        data:{name}
+    });
+    
+    if(!update)
+        throw new appError("Update not found",404);
+    
+    return update
 };
