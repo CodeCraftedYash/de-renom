@@ -1,11 +1,10 @@
 //this middleware extracts the meta deta from the header and read its value to verify if the request is authentic 
 
-import { NextFunction,Response } from "express";
+import { Request,NextFunction,Response } from "express";
 import jwt from "jsonwebtoken";
 import { env } from "../modules/auth/auth.env";
-import { AuthenticateType } from "../types/authenticateType";
 
-export const authenticate = ( req:AuthenticateType, res:Response, next:NextFunction) => {
+export const authenticate = ( req:Request, res:Response, next:NextFunction) => {
 
     const authHeader = req.headers.authorization;
 
@@ -20,8 +19,8 @@ export const authenticate = ( req:AuthenticateType, res:Response, next:NextFunct
 
     try{
         const decoded = jwt.verify(token,env.ACCESS_TOKEN_SECRET) as {
-            sub : string,
-            role : string
+            id : string,
+            role : "USER"|"STAFF"|"ADMIN"
         }
         req.user = decoded ;
         next();
